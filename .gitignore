@@ -1,9 +1,44 @@
+# ============================================
+# Root .gitignore — Medical Chatbot
+# ============================================
+
+# Environment Variables
 .env
 .env.*
 !.env.example
+
+# Python
 __pycache__/
 *.py[cod]
+*.pyo
 .venv/
 venv/
+*.egg-info/
+dist/
+build/
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Streamlit
 .streamlit/secrets.toml
+
+# Data files (PDFs are too large for Git)
+backend/data/*.pdf
 data/*.pdf
+
+# Database
+*.db
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace

@@ -1,11 +1,15 @@
+import os
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
+# Paths relative to this file's directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Step 1 -- Load raw data
 
-data_path = "data/"
+data_path = os.path.join(BASE_DIR, "data")
 
 def load_pdf_data(data):
     loader = DirectoryLoader(
@@ -42,7 +46,7 @@ def get_embeddings_model(text_chunk):
 embedding_model = get_embeddings_model(text_chunk)
 
 # step 4 -- store embeddings in FAISS
-DB_FAISS_PATH = "vectorstore/db_faiss"
+DB_FAISS_PATH = os.path.join(BASE_DIR, "vectorstore", "db_faiss")
 db = FAISS.from_documents(text_chunk, embedding_model)
 db.save_local(DB_FAISS_PATH)
 print("FAISS vector database created successfully!")

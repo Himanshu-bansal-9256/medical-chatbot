@@ -10,3 +10,10 @@ sentence-transformers
 faiss-cpu
 pypdf
 torch
+flask
+flask-cors
+flask-limiter
+rank-bm25
+PyJWT
+bcrypt
+pytest
