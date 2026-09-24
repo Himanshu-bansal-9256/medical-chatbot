@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-/* ============================================
-   MediCare AI — Premium Clinical Design System
-   ============================================ */
-
 :root {
   /* --- Dark Theme (Default) --- */
   --bg-primary: #0a0d12;
@@ -86,10 +82,6 @@
   --error: #dc2626;
   --error-bg: rgba(220, 38, 38, 0.08);
 }
-
-/* ============================================
-   Global Reset & Defaults
-   ============================================ */
 
 *, *::before, *::after {
   margin: 0;

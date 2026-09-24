@@ -13,10 +13,7 @@ from sentence_transformers import CrossEncoder
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
-# ============================================
 # Logging
-# ============================================
-
 logger = logging.getLogger("medicare.rag")
 logging.basicConfig(
     level=logging.INFO,
@@ -24,10 +21,7 @@ logging.basicConfig(
     datefmt="%H:%M:%S"
 )
 
-# ============================================
 # Environment
-# ============================================
-
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -38,10 +32,7 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is not set!")
 
-# ============================================
 # Models
-# ============================================
-
 llm = ChatGroq(
     model="openai/gpt-oss-20b",
     groq_api_key=GROQ_API_KEY,
@@ -65,10 +56,7 @@ reranker = CrossEncoder(
 
 logger.info("Models loaded successfully")
 
-# ============================================
 # FAISS Vector Database
-# ============================================
-
 db = FAISS.load_local(
     DB_FAISS_PATH,
     embedding_model,
@@ -81,11 +69,7 @@ retriever = db.as_retriever(
 
 logger.info("FAISS database loaded")
 
-# ============================================
 # BM25 Index for Hybrid Retrieval
-# ============================================
-
-# Extract all documents from FAISS for BM25 indexing
 all_docs_dict = db.docstore._dict
 all_docs = list(all_docs_dict.values())
 all_doc_texts = [doc.page_content for doc in all_docs]
@@ -96,10 +80,7 @@ bm25 = BM25Okapi(tokenized_corpus)
 
 logger.info(f"BM25 index built with {len(all_docs)} documents")
 
-# ============================================
 # Helpers
-# ============================================
-
 def format_chat_history(chat_history):
     formatted = ""
     for msg in chat_history:
@@ -111,10 +92,7 @@ def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 
-# ============================================
 # Prompts
-# ============================================
-
 rewriter_prompt = PromptTemplate(
     input_variables=["chat_history", "question"],
     template="""
@@ -189,20 +167,14 @@ Title:
 """
 )
 
-# ============================================
 # Chains
-# ============================================
-
 rewriter_chain = rewriter_prompt | llm | StrOutputParser()
 answer_chain = answer_prompt | llm | StrOutputParser()
 answer_chain_streaming = answer_prompt | llm_streaming | StrOutputParser()
 title_chain = title_prompt | llm | StrOutputParser()
 
 
-# ============================================
 # Hybrid Retrieval (BM25 + FAISS)
-# ============================================
-
 def hybrid_retrieve(query, k_faiss=5, k_bm25=5):
     """Combine FAISS vector search with BM25 keyword search."""
 
@@ -249,10 +221,7 @@ def rerank_documents(question, documents):
     return top_docs
 
 
-# ============================================
 # MAIN RAG FUNCTION (Non-streaming)
-# ============================================
-
 def ask_question(question, chat_history):
     total_start = time.time()
 
@@ -302,11 +271,7 @@ def ask_question(question, chat_history):
         "source_documents": reranked_docs
     }
 
-
-# ============================================
 # STREAMING RAG FUNCTION
-# ============================================
-
 def ask_question_stream(question, chat_history):
     """Generator that yields answer chunks for SSE streaming."""
 
@@ -358,10 +323,7 @@ def ask_question_stream(question, chat_history):
     yield {"type": "done", "content": rewritten_question}
 
 
-# ============================================
 # AUTO TITLE GENERATION
-# ============================================
-
 def generate_title(question, answer):
     """Generate a short 3-5 word title for a conversation."""
     try:

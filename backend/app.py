@@ -60,10 +60,7 @@ def ratelimit_handler(e):
     }), 429
 
 
-# ============================================
 # Health Check
-# ============================================
-
 @app.route("/api/health", methods=["GET"])
 def health_check():
     """Health check endpoint."""
@@ -77,10 +74,7 @@ def health_check():
     })
 
 
-# ============================================
 # Authentication
-# ============================================
-
 @app.route("/api/auth/signup", methods=["POST"])
 @limiter.limit("10 per minute")
 def signup():
@@ -204,11 +198,7 @@ def change_password(user_id):
 
     return jsonify({"message": "Password updated successfully"})
 
-
-# ============================================
 # Chat History
-# ============================================
-
 @app.route("/api/history", methods=["GET"])
 @auth_required
 def list_sessions(user_id):
@@ -304,11 +294,7 @@ def get_shared_session_route(share_token):
         "session": session
     })
 
-
-# ============================================
 # Chat (Standard & Streaming)
-# ============================================
-
 @app.route("/api/chat", methods=["POST"])
 @auth_required
 @limiter.limit("20 per minute")
@@ -392,10 +378,8 @@ def chat_stream(user_id):
 
 
 if __name__ == "__main__":
-    print("\n========================================")
     print("  MediCare AI Backend Server")
     print("  Running on http://localhost:5000")
-    print("========================================\n")
     app.run(
         host="0.0.0.0",
         port=5000,

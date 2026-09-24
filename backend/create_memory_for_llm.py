@@ -8,7 +8,6 @@ from langchain_community.vectorstores import FAISS
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Step 1 -- Load raw data
-
 data_path = os.path.join(BASE_DIR, "data")
 
 def load_pdf_data(data):
